@@ -246,11 +246,25 @@ function updateNebulaWarmth(total) {
 }
 
 function updateTitle(total) {
+  const syncLevelEl = document.getElementById('sync-level');
+  const syncPctEl = document.getElementById('sync-pct');
+  const pct = (total / 9 * 100).toFixed(1);
+
   if (total === 9) {
     document.title = 'The Obsidian Signal — DECODED';
+    if (syncLevelEl) syncLevelEl.textContent = 'LEVEL 10 (RESOLVED)';
+    if (syncPctEl) syncPctEl.textContent = '100.0%';
   } else {
     document.title = `Meridian Observatory [${total}/9]`;
+    if (syncLevelEl) syncLevelEl.textContent = `LEVEL ${total + 1}`;
+    if (syncPctEl) syncPctEl.textContent = `${pct}%`;
   }
+
+  // Print diagnostic log
+  console.log(
+    `%c[ SYSTEM ANOMALY ] Anomaly Vector Sync: ${pct}% | Current Node: Level ${total === 9 ? '10 (RESOLVED)' : total + 1}`,
+    'color: #00ff88; font-family: monospace; font-size: 11px; font-weight: bold;'
+  );
 }
 
 // ─── Restore UI from Loaded Progress ─────────────────────────
@@ -280,9 +294,7 @@ function restoreUIState() {
   }
 
   updateNebulaWarmth(count);
-  if (count > 0) {
-    updateTitle(count);
-  }
+  updateTitle(count);
 }
 
 // ─── Scroll Listener ─────────────────────────────────────────
