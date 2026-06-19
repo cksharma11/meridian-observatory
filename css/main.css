@@ -1,0 +1,1085 @@
+/* ═══════════════════════════════════════════════════════
+   MAIN.CSS — The Obsidian Signal — Core Design System
+   ═══════════════════════════════════════════════════════ */
+
+/* ── RESET ─────────────────────────────────────────── */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scrollbar-width: thin;
+  scrollbar-color: var(--mars-red) var(--void-black);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--void-black);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--mars-red);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mars-red-bright);
+}
+
+::selection {
+  background: var(--signal-green);
+  color: var(--void-black);
+}
+
+/* ── CUSTOM PROPERTIES ─────────────────────────────── */
+:root {
+  /* Core palette */
+  --void-black: #0a0a0f;
+  --void-deep: #06060b;
+  --void-surface: #111118;
+  --void-surface-2: #1a1a24;
+  --void-border: #222233;
+
+  /* Signal colors */
+  --mars-red: #c0392b;
+  --mars-red-bright: #e74c3c;
+  --venus-gold: #f39c12;
+  --venus-gold-deep: #d4a017;
+  --nebula-violet: #6c3483;
+  --nebula-violet-deep: #2e1a47;
+  --signal-green: #00ff88;
+  --signal-green-dim: #00cc6a;
+  --ghost-white: rgba(255, 255, 255, 0.03);
+
+  /* Typography */
+  --font-display: 'Orbitron', sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 2rem;
+  --space-xl: 4rem;
+  --space-2xl: 6rem;
+  --space-3xl: 8rem;
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 300ms ease;
+  --transition-slow: 600ms ease;
+  --transition-glacial: 1200ms ease;
+
+  /* Layout */
+  --container-max: 1100px;
+  --header-height: 56px;
+
+  /* Dynamic warmth: JS animates 0 → 1 as fragments are found */
+  --nebula-warmth: 0;
+}
+
+/* ── BODY ──────────────────────────────────────────── */
+body {
+  background: var(--void-black);
+  color: #d0d0e0;
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.7;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+  background-image:
+    radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      rgba(110, 52, 131, calc(0.04 + var(--nebula-warmth) * 0.08)) 0%,
+      transparent 70%
+    ),
+    radial-gradient(
+      ellipse 60% 50% at 70% 70%,
+      rgba(192, 57, 43, calc(0.03 + var(--nebula-warmth) * 0.06)) 0%,
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 50% 40% at 20% 80%,
+      rgba(243, 156, 18, calc(0.02 + var(--nebula-warmth) * 0.05)) 0%,
+      transparent 50%
+    );
+}
+
+/* ── CANVAS LAYERS ─────────────────────────────────── */
+#starfield-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+#cursor-trail-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9998;
+  pointer-events: none;
+}
+
+#crt-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 9990;
+  pointer-events: none;
+}
+
+#ghost-text-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* ── HEADER ────────────────────────────────────────── */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--header-height);
+  z-index: 1000;
+  background: rgba(10, 10, 15, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.header-inner {
+  max-width: var(--container-max);
+  margin: 0 auto;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+  gap: var(--space-md);
+}
+
+.header-logo {
+  flex-shrink: 0;
+}
+
+.logo-text {
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: #ffffff;
+  text-transform: uppercase;
+}
+
+.logo-dim {
+  color: rgba(255, 255, 255, 0.3);
+  font-weight: 400;
+}
+
+/* ── PROGRESS STARS ────────────────────────────────── */
+.progress-stars {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress-star {
+  display: block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  transition: all var(--transition-slow);
+  position: relative;
+}
+
+.progress-star.discovered {
+  background: var(--signal-green);
+  box-shadow:
+    0 0 4px var(--signal-green),
+    0 0 10px rgba(0, 255, 136, 0.4),
+    0 0 20px rgba(0, 255, 136, 0.15);
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ── HEADER CONTROLS ───────────────────────────────── */
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-shrink: 0;
+}
+
+#mute-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  padding: 6px;
+  opacity: 0.4;
+  transition: opacity var(--transition-fast);
+  line-height: 1;
+  color: white;
+}
+#mute-btn:hover {
+  opacity: 0.8;
+}
+
+#transmit-btn {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: transparent;
+  color: var(--mars-red);
+  border: 1px solid var(--mars-red);
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+#transmit-btn:hover {
+  background: rgba(192, 57, 43, 0.15);
+  box-shadow: 0 0 12px rgba(192, 57, 43, 0.25);
+}
+
+/* ── SECTIONS — SHARED ─────────────────────────────── */
+main {
+  position: relative;
+  z-index: 2;
+}
+
+section {
+  min-height: 100vh;
+  padding: calc(var(--header-height) + var(--space-xl)) var(--space-md) var(--space-xl);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-container {
+  max-width: var(--container-max);
+  width: 100%;
+  margin: 0 auto;
+}
+
+/* ── SECTION 1: OBSERVATORY (HERO) ─────────────────── */
+#observatory {
+  text-align: center;
+  overflow: hidden;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.hero-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin-bottom: var(--space-lg);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #ffffff;
+  text-shadow:
+    0 0 40px rgba(108, 52, 131, 0.4),
+    0 0 80px rgba(108, 52, 131, 0.15);
+  margin-bottom: var(--space-md);
+  line-height: 1.2;
+}
+
+.hero-status {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  color: var(--mars-red);
+  margin-bottom: var(--space-lg);
+  opacity: 0.8;
+}
+
+.hero-subtitle {
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-weight: 300;
+  font-style: italic;
+  color: rgba(255, 255, 255, 0.5);
+  letter-spacing: 0.05em;
+}
+
+/* Nebula cloud — Fragment 1 hover puzzle */
+.nebula-cloud {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: radial-gradient(
+    ellipse at 40% 40%,
+    rgba(192, 57, 43, 0.25),
+    rgba(243, 156, 18, 0.15),
+    rgba(108, 52, 131, 0.1),
+    transparent
+  );
+  filter: blur(30px);
+  opacity: 0.5;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: auto;
+  cursor: default;
+  transition: all 1.2s ease;
+  z-index: 1;
+  animation: float-drift 12s ease-in-out infinite;
+}
+
+.nebula-cloud:hover {
+  filter: blur(15px);
+  opacity: 0.85;
+  transform: translate(-50%, -50%) scale(1.3);
+  border-radius: 45% 55% 50% 50%;
+}
+
+/* ── SECTION 2: THE SIGNAL ─────────────────────────── */
+#signal {
+  padding-top: calc(var(--header-height) + var(--space-2xl));
+}
+
+.signal-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.signal-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: var(--space-sm);
+}
+
+.signal-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.35);
+  letter-spacing: 0.2em;
+  font-style: italic;
+}
+
+/* Waveform container */
+#waveform-container {
+  max-width: var(--container-max);
+  width: 100%;
+  background: var(--void-surface);
+  border: 1px solid var(--void-border);
+  border-radius: 4px;
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
+  position: relative;
+}
+
+.waveform-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.25);
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+
+#waveform-canvas {
+  width: 100%;
+  height: 200px;
+  display: block;
+  border-radius: 2px;
+  background: var(--void-deep);
+}
+
+.waveform-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: var(--signal-green-dim);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-top: var(--space-sm);
+}
+
+.status-dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--signal-green);
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+/* Signal data readout */
+.signal-data {
+  max-width: var(--container-max);
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1px;
+  background: var(--void-border);
+  border: 1px solid var(--void-border);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: var(--space-lg);
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--void-surface);
+  gap: var(--space-md);
+}
+
+.data-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.35);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.data-value {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--signal-green-dim);
+  text-align: right;
+}
+
+/* Hidden frequency reveal (Fragment 3) */
+#frequency-reveal {
+  max-width: var(--container-max);
+  width: 100%;
+  text-align: center;
+  padding: var(--space-lg);
+  background: rgba(0, 255, 136, 0.03);
+  border: 1px solid rgba(0, 255, 136, 0.15);
+  border-radius: 4px;
+}
+
+.fragment-hidden {
+  display: none;
+}
+
+.reveal-label {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: var(--signal-green-dim);
+  text-transform: uppercase;
+  margin-bottom: var(--space-sm);
+}
+
+.reveal-text {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--signal-green);
+  letter-spacing: 0.1em;
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+}
+
+/* Custom context menu */
+#custom-context-menu {
+  position: absolute;
+  display: none;
+  background: var(--void-surface);
+  border: 1px solid var(--void-border);
+  border-radius: 4px;
+  padding: var(--space-xs) 0;
+  z-index: 10000;
+  min-width: 180px;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.6),
+    0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+#custom-context-menu.visible {
+  display: block;
+}
+
+.context-item {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.7);
+  padding: 8px 16px;
+  text-align: left;
+  cursor: pointer;
+  letter-spacing: 0.05em;
+  transition: all var(--transition-fast);
+}
+
+.context-item:hover {
+  background: rgba(0, 255, 136, 0.08);
+  color: var(--signal-green);
+}
+
+/* ── SECTION 3: CATALOG ────────────────────────────── */
+#catalog {
+  padding-top: calc(var(--header-height) + var(--space-2xl));
+}
+
+.catalog-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+}
+
+.catalog-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: var(--space-sm);
+}
+
+.catalog-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.15em;
+}
+
+/* Planet cards */
+.planet-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--space-lg);
+  max-width: var(--container-max);
+  width: 100%;
+}
+
+.planet-card {
+  background: var(--void-surface);
+  border: 1px solid var(--void-border);
+  border-radius: 6px;
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.planet-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  transition: opacity var(--transition-base);
+}
+
+.planet-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+}
+
+/* Venus */
+.planet-card[data-planet="venus"] {
+  border-color: rgba(243, 156, 18, 0.15);
+}
+.planet-card[data-planet="venus"]::before {
+  background: linear-gradient(90deg, transparent, var(--venus-gold), transparent);
+  opacity: 0.5;
+}
+.planet-card[data-planet="venus"]:hover {
+  border-color: rgba(243, 156, 18, 0.35);
+  box-shadow: 0 12px 40px rgba(243, 156, 18, 0.08);
+}
+
+/* Mars */
+.planet-card[data-planet="mars"] {
+  border-color: rgba(192, 57, 43, 0.15);
+}
+.planet-card[data-planet="mars"]::before {
+  background: linear-gradient(90deg, transparent, var(--mars-red), transparent);
+  opacity: 0.5;
+}
+.planet-card[data-planet="mars"]:hover {
+  border-color: rgba(192, 57, 43, 0.35);
+  box-shadow: 0 12px 40px rgba(192, 57, 43, 0.08);
+}
+
+/* Void */
+.planet-card[data-planet="void"] {
+  border-style: dashed;
+  border-color: rgba(108, 52, 131, 0.2);
+  background: repeating-linear-gradient(
+    135deg,
+    var(--void-surface),
+    var(--void-surface) 10px,
+    rgba(108, 52, 131, 0.02) 10px,
+    rgba(108, 52, 131, 0.02) 20px
+  );
+}
+.planet-card[data-planet="void"]::before {
+  background: linear-gradient(90deg, transparent, var(--nebula-violet), transparent);
+  opacity: 0.3;
+}
+.planet-card[data-planet="void"]:hover {
+  border-color: rgba(108, 52, 131, 0.4);
+  box-shadow: 0 12px 40px rgba(108, 52, 131, 0.1);
+}
+
+.planet-card-header {
+  margin-bottom: var(--space-md);
+}
+
+.planet-card-header h3 {
+  font-family: var(--font-display);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  color: #ffffff;
+  margin-bottom: var(--space-xs);
+}
+
+.planet-designation {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.3);
+  letter-spacing: 0.1em;
+}
+
+.planet-data {
+  margin-bottom: var(--space-md);
+}
+
+.planet-stat {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.stat-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+}
+
+.stat-value {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-align: right;
+}
+
+.planet-description {
+  font-size: 0.85rem;
+  line-height: 1.7;
+  color: rgba(255, 255, 255, 0.45);
+  font-style: italic;
+  margin-bottom: var(--space-md);
+}
+
+.planet-glyph {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  font-size: 2rem;
+  opacity: 0.08;
+  transition: opacity var(--transition-base);
+}
+.planet-card:hover .planet-glyph {
+  opacity: 0.18;
+}
+
+/* ── SECTION 4: LOGBOOK ────────────────────────────── */
+#logbook {
+  padding-top: calc(var(--header-height) + var(--space-2xl));
+  align-items: center;
+}
+
+.logbook-header {
+  text-align: center;
+  margin-bottom: var(--space-xl);
+  max-width: var(--container-max);
+  width: 100%;
+}
+
+.logbook-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: var(--space-sm);
+}
+
+.logbook-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.12em;
+}
+
+.log-entries {
+  max-width: 760px;
+  width: 100%;
+}
+
+.log-entry {
+  border-left: 2px solid var(--void-border);
+  padding: var(--space-lg) var(--space-lg) var(--space-lg) var(--space-xl);
+  margin-bottom: var(--space-lg);
+  position: relative;
+  transition: border-color var(--transition-base);
+}
+
+.log-entry::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: var(--space-lg);
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--void-border);
+  border: 2px solid var(--void-black);
+  transition: background var(--transition-base);
+}
+
+.log-entry:hover {
+  border-left-color: var(--mars-red);
+}
+
+.log-entry:hover::before {
+  background: var(--mars-red);
+}
+
+.log-meta {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+  margin-bottom: var(--space-sm);
+}
+
+.log-date {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--venus-gold-deep);
+  letter-spacing: 0.1em;
+}
+
+.log-id {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: rgba(255, 255, 255, 0.15);
+  letter-spacing: 0.1em;
+}
+
+.log-title {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  margin-bottom: var(--space-sm);
+  text-transform: uppercase;
+}
+
+.log-content {
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.9rem;
+  line-height: 1.8;
+}
+
+.log-content p {
+  margin-bottom: var(--space-sm);
+}
+
+.log-content p:last-child {
+  margin-bottom: 0;
+}
+
+.log-content em {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: italic;
+}
+
+.log-content strong {
+  color: var(--mars-red-bright);
+  font-weight: 600;
+}
+
+.log-signoff {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.3);
+  margin-top: var(--space-md) !important;
+  font-style: italic;
+}
+
+/* Redacted text */
+.redacted {
+  background: #ffffff;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 1px 4px;
+  border-radius: 2px;
+  transition: all var(--transition-base);
+  user-select: all;
+  position: relative;
+}
+
+.redacted.revealed {
+  background: transparent;
+  color: var(--signal-green);
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+/* ── SECTION 5: VAULT ──────────────────────────────── */
+#vault {
+  padding-top: calc(var(--header-height) + var(--space-2xl));
+  text-align: center;
+}
+
+.vault-header {
+  margin-bottom: var(--space-xl);
+}
+
+.vault-header h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.5rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #ffffff;
+  margin-bottom: var(--space-sm);
+}
+
+.vault-subtitle {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.15em;
+}
+
+/* ── FOOTER ────────────────────────────────────────── */
+footer {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: var(--space-3xl) var(--space-md) var(--space-xl);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.footer-copyright {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.15);
+  letter-spacing: 0.15em;
+  margin-bottom: var(--space-md);
+}
+
+.footer-morse {
+  font-family: var(--font-mono);
+  font-size: 0.5rem;
+  color: rgba(255, 255, 255, 0.08);
+  letter-spacing: 0.3em;
+  margin-bottom: var(--space-md);
+  cursor: help;
+  transition: color var(--transition-slow);
+}
+.footer-morse:hover {
+  color: rgba(255, 255, 255, 0.2);
+}
+
+.footer-epitaph {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.12);
+  font-style: italic;
+}
+
+/* ── SATELLITE ICON ────────────────────────────────── */
+#satellite-icon {
+  position: fixed;
+  top: 80px;
+  left: 30px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 500;
+  transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+  filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.2));
+  user-select: none;
+  line-height: 1;
+}
+
+#satellite-icon:hover {
+  transform: scale(1.3) rotate(15deg);
+  filter: drop-shadow(0 0 14px rgba(0, 255, 136, 0.5));
+}
+
+/* ── FRAGMENT REVEAL OVERLAY ───────────────────────── */
+#fragment-reveal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(6, 6, 11, 0.92);
+  z-index: 11000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity var(--transition-slow);
+}
+
+#fragment-reveal-overlay.visible {
+  display: flex;
+  opacity: 1;
+}
+
+#fragment-text {
+  font-family: var(--font-display);
+  font-size: clamp(1rem, 3vw, 1.6rem);
+  color: var(--signal-green);
+  text-align: center;
+  letter-spacing: 0.1em;
+  text-shadow:
+    0 0 20px rgba(0, 255, 136, 0.4),
+    0 0 60px rgba(0, 255, 136, 0.15);
+  max-width: 600px;
+  padding: var(--space-lg);
+  line-height: 1.6;
+}
+
+/* ── MARGIN NOTES ──────────────────────────────────── */
+.margin-note {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.06);
+  letter-spacing: 0.08em;
+  pointer-events: none;
+  transition: color var(--transition-glacial);
+  white-space: nowrap;
+  user-select: none;
+}
+
+section:hover .margin-note {
+  color: rgba(255, 255, 255, 0.12);
+}
+
+/* ── RESPONSIVE ────────────────────────────────────── */
+@media (max-width: 900px) {
+  .planet-cards {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .signal-data {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  :root {
+    --header-height: 48px;
+  }
+
+  .logo-text {
+    font-size: 0.6rem;
+  }
+
+  .logo-dim {
+    display: none;
+  }
+
+  .progress-stars {
+    gap: 5px;
+  }
+
+  .progress-star {
+    width: 5px;
+    height: 5px;
+  }
+
+  #transmit-btn {
+    font-size: 0.55rem;
+    padding: 4px 8px;
+  }
+
+  .hero-title {
+    font-size: clamp(1.2rem, 6vw, 2rem);
+  }
+
+  section {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+
+  .log-entry {
+    padding-left: var(--space-lg);
+  }
+
+  .planet-card {
+    padding: var(--space-md);
+  }
+
+  .margin-note {
+    display: none;
+  }
+
+  #satellite-icon {
+    font-size: 1.2rem;
+  }
+
+  .nebula-cloud {
+    width: 150px;
+    height: 150px;
+  }
+}

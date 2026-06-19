@@ -1,0 +1,521 @@
+/* ═══════════════════════════════════════════════════════
+   EFFECTS.CSS — The Obsidian Signal — Animations & FX
+   ═══════════════════════════════════════════════════════ */
+
+/* ── KEYFRAME ANIMATIONS ───────────────────────────── */
+
+/* Glitch: clip-path slice + color channel split */
+@keyframes glitch {
+  0%, 100% {
+    clip-path: inset(0 0 0 0);
+    text-shadow: none;
+    transform: translate(0);
+  }
+  5% {
+    clip-path: inset(40% 0 20% 0);
+    text-shadow: -2px 0 #e74c3c, 2px 0 #3498db;
+    transform: translate(-2px, 1px);
+  }
+  10% {
+    clip-path: inset(10% 0 60% 0);
+    text-shadow: 2px 0 #e74c3c, -2px 0 #3498db;
+    transform: translate(2px, -1px);
+  }
+  15% {
+    clip-path: inset(70% 0 5% 0);
+    text-shadow: -1px 0 #e74c3c, 1px 0 #3498db;
+    transform: translate(-1px, 0);
+  }
+  20% {
+    clip-path: inset(0 0 0 0);
+    text-shadow: none;
+    transform: translate(0);
+  }
+}
+
+/* Flicker: irregular opacity for failing equipment */
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  4%  { opacity: 0.9; }
+  6%  { opacity: 0.35; }
+  8%  { opacity: 0.95; }
+  42% { opacity: 1; }
+  43% { opacity: 0.5; }
+  44% { opacity: 1; }
+  46% { opacity: 0.6; }
+  47% { opacity: 1; }
+  56% { opacity: 1; }
+  57% { opacity: 0.3; }
+  58% { opacity: 1; }
+  87% { opacity: 1; }
+  88% { opacity: 0.4; }
+  89% { opacity: 1; }
+}
+
+/* Pulse glow for discovered progress stars */
+@keyframes pulse-glow {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow:
+      0 0 4px var(--signal-green),
+      0 0 10px rgba(0, 255, 136, 0.4),
+      0 0 20px rgba(0, 255, 136, 0.15);
+  }
+  50% {
+    transform: scale(1.4);
+    box-shadow:
+      0 0 6px var(--signal-green),
+      0 0 16px rgba(0, 255, 136, 0.6),
+      0 0 30px rgba(0, 255, 136, 0.25);
+  }
+}
+
+/* Float drift for nebula cloud */
+@keyframes float-drift {
+  0%, 100% {
+    transform: translate(-50%, -50%) translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translate(-50%, -50%) translateY(-12px) rotate(1deg);
+  }
+  50% {
+    transform: translate(-50%, -50%) translateY(4px) rotate(-0.5deg);
+  }
+  75% {
+    transform: translate(-50%, -50%) translateY(-8px) rotate(0.8deg);
+  }
+}
+
+/* CRT scan line sweep */
+@keyframes scan-line {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100vh);
+  }
+}
+
+/* Iris open: clip-path circle expanding */
+@keyframes iris-open {
+  0% {
+    clip-path: circle(0% at 50% 50%);
+  }
+  100% {
+    clip-path: circle(75% at 50% 50%);
+  }
+}
+
+/* Typewriter cursor blink for fragment reveal */
+@keyframes typewriter-cursor {
+  0%, 100% { border-right-color: var(--signal-green); }
+  50% { border-right-color: transparent; }
+}
+
+/* Shake for turbulence / errors */
+@keyframes shake {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-3px, 1px); }
+  20% { transform: translate(2px, -2px); }
+  30% { transform: translate(-2px, 0px); }
+  40% { transform: translate(1px, 2px); }
+  50% { transform: translate(-1px, -1px); }
+  60% { transform: translate(3px, 1px); }
+  70% { transform: translate(-2px, -2px); }
+  80% { transform: translate(2px, 0px); }
+  90% { transform: translate(-1px, 1px); }
+}
+
+/* Fade in up — scroll reveal */
+@keyframes fade-in-up {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Static flash — brief white flash for typing events */
+@keyframes static-flash {
+  0% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.06;
+  }
+  10% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Ripple expand — click feedback */
+@keyframes ripple-expand {
+  0% {
+    transform: scale(0);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* Border pulse — subtle border oscillation */
+@keyframes border-pulse {
+  0%, 100% {
+    border-color: rgba(0, 255, 136, 0.15);
+  }
+  50% {
+    border-color: rgba(0, 255, 136, 0.35);
+  }
+}
+
+/* Constellation draw — SVG stroke animation */
+@keyframes constellation-draw {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Satellite drift */
+@keyframes satellite-bob {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-5px) rotate(5deg);
+  }
+  66% {
+    transform: translateY(3px) rotate(-3deg);
+  }
+}
+
+/* Fragment slot illuminate */
+@keyframes fragment-illuminate {
+  0% {
+    box-shadow: none;
+    border-color: var(--void-border);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+    border-color: var(--signal-green);
+  }
+  100% {
+    box-shadow: 0 0 8px rgba(0, 255, 136, 0.2);
+    border-color: var(--signal-green);
+  }
+}
+
+
+/* ── ANIMATION UTILITY CLASSES ─────────────────────── */
+
+/* Glitch effect class — applied by JS */
+.glitching {
+  animation: glitch 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Flicker effect class */
+.flickering {
+  animation: flicker 3s infinite;
+}
+
+/* Turbulence — applied to body on errors / special events */
+.turbulence {
+  animation: shake 0.5s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Fade-in-up for scroll reveals */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Satellite idle animation */
+#satellite-icon {
+  animation: satellite-bob 6s ease-in-out infinite;
+}
+
+
+/* ── CRT OVERLAY ───────────────────────────────────── */
+#crt-overlay {
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(0, 0, 0, 0.04) 2px,
+      rgba(0, 0, 0, 0.04) 4px
+    );
+  mix-blend-mode: multiply;
+}
+
+#crt-overlay::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.04),
+    transparent
+  );
+  animation: scan-line 8s linear infinite;
+  pointer-events: none;
+}
+
+
+/* ── RIPPLE EFFECT ─────────────────────────────────── */
+.ripple {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border: 1px solid rgba(0, 255, 136, 0.4);
+  border-radius: 50%;
+  animation: ripple-expand 0.8s ease-out forwards;
+  pointer-events: none;
+  z-index: 100;
+}
+
+
+/* ── STATIC OVERLAY ────────────────────────────────── */
+.static-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: white;
+  z-index: 10500;
+  pointer-events: none;
+  animation: static-flash 0.15s ease-out forwards;
+}
+
+
+/* ── GHOST TEXT ─────────────────────────────────────── */
+.ghost-text {
+  position: absolute;
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 5rem);
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.03);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  user-select: none;
+  pointer-events: auto;
+  transition: color 2s ease;
+  white-space: nowrap;
+}
+
+.ghost-text:hover {
+  color: rgba(255, 255, 255, 0.08);
+}
+
+
+/* ── CURSOR TRAIL DOTS ─────────────────────────────── */
+.cursor-dot {
+  position: fixed;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(0, 255, 136, 0.5);
+  pointer-events: none;
+  z-index: 9997;
+  transition: opacity 0.5s ease;
+}
+
+
+/* ── SATELLITE TRAIL ───────────────────────────────── */
+.satellite-trail {
+  position: fixed;
+  width: 2px;
+  height: 2px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  z-index: 499;
+  opacity: 0;
+  animation: fade-in-up 0.3s ease reverse forwards;
+}
+
+
+/* ── PLANET CARD SCATTER ───────────────────────────── */
+.planet-card.scattering {
+  transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+}
+
+.planet-card.scattered-left {
+  transform: translateX(-40px) rotate(-5deg);
+  opacity: 0.3;
+}
+
+.planet-card.scattered-right {
+  transform: translateX(40px) rotate(5deg);
+  opacity: 0.3;
+}
+
+.planet-card.scattered-down {
+  transform: translateY(30px) scale(0.95);
+  opacity: 0.3;
+}
+
+
+/* ── FRAGMENT REVEAL ANIMATION ─────────────────────── */
+#fragment-reveal-overlay {
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+#fragment-text {
+  animation: fade-in-up 0.8s ease both;
+}
+
+#fragment-text::after {
+  content: '▊';
+  animation: typewriter-cursor 0.8s steps(1) infinite;
+  margin-left: 4px;
+  color: var(--signal-green);
+}
+
+#fragment-reveal-overlay .fragment-number {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: rgba(0, 255, 136, 0.4);
+  margin-bottom: var(--space-md);
+  text-transform: uppercase;
+}
+
+
+/* ── DISCOVERED STAR TRANSITION ────────────────────── */
+.progress-star {
+  transition:
+    background 0.5s ease,
+    box-shadow 0.5s ease,
+    transform 0.3s ease;
+}
+
+.progress-star.discovered {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.progress-star.just-discovered {
+  animation: fragment-illuminate 1s ease forwards, pulse-glow 2s ease-in-out 1s infinite;
+}
+
+
+/* ── NEBULA CLOUD HOVER MORPH ──────────────────────── */
+.nebula-cloud {
+  transition:
+    filter 1.2s ease,
+    opacity 1.2s ease,
+    transform 1.2s ease,
+    border-radius 2s ease;
+}
+
+.nebula-cloud:hover {
+  border-radius: 35% 65% 45% 55% / 55% 40% 60% 45%;
+}
+
+.nebula-cloud.morphing {
+  border-radius: 30% 70% 50% 50% / 60% 35% 65% 40%;
+  filter: blur(10px);
+  opacity: 1;
+  animation: float-drift 4s ease-in-out infinite;
+}
+
+
+/* ── LOG ENTRY SCROLL REVEAL ───────────────────────── */
+.log-entry {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.log-entry.in-view {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ── BORDER PULSE FOR ACTIVE ELEMENTS ──────────────── */
+.active-border-pulse {
+  animation: border-pulse 2s ease-in-out infinite;
+}
+
+
+/* ── CONSTELLATION LINE DRAWING ────────────────────── */
+.constellation-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: constellation-draw 3s ease forwards;
+}
+
+
+/* ── FRAGMENT ASSEMBLY SLOT FX ─────────────────────── */
+.fragment-slot {
+  width: 48px;
+  height: 48px;
+  border: 1px solid var(--void-border);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.6s ease;
+  position: relative;
+}
+
+.fragment-slot .fragment-label {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  color: rgba(255, 255, 255, 0.12);
+  letter-spacing: 0.05em;
+  transition: color 0.6s ease;
+}
+
+.fragment-slot.filled {
+  border-color: var(--signal-green);
+  background: rgba(0, 255, 136, 0.05);
+  animation: fragment-illuminate 1.2s ease forwards;
+}
+
+.fragment-slot.filled .fragment-label {
+  color: var(--signal-green);
+}
+
+
+/* ── REDUCED MOTION ────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .nebula-cloud {
+    animation: none;
+  }
+
+  #crt-overlay::after {
+    animation: none;
+  }
+}

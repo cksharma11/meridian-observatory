@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Meridian Deep-Space Observatory — Abandoned signal monitoring station. Something is still transmitting.">
+  <meta name="theme-color" content="#0a0a0f">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Meridian Observatory — The Obsidian Signal">
+  <meta property="og:description" content="An abandoned deep-space observatory. The signal persists. Will you decode it?">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="assets/og-image.png">
+  <meta property="og:url" content="https://meridian-observatory.github.io">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Orbitron:wght@400;500;700;900&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/effects.css">
+  <link rel="stylesheet" href="css/vault.css">
+
+  <title>Meridian Observatory</title>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════
+       GLOBAL CANVAS & OVERLAY LAYERS
+  ════════════════════════════════════════════ -->
+  <canvas id="starfield-canvas" aria-hidden="true"></canvas>
+  <canvas id="cursor-trail-canvas" aria-hidden="true"></canvas>
+  <div id="crt-overlay" aria-hidden="true"></div>
+  <div id="ghost-text-layer" aria-hidden="true">
+    <span class="ghost-text" style="top:18vh;left:5vw;">LOOK CLOSER</span>
+    <span class="ghost-text" style="top:42vh;right:8vw;">THE SIGNAL IS NOT RANDOM</span>
+    <span class="ghost-text" style="top:73vh;left:12vw;">HOVER WHERE LIGHT GATHERS</span>
+    <span class="ghost-text" style="top:91vh;right:3vw;">COUNT THE STARS</span>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       HEADER / NAVIGATION
+  ════════════════════════════════════════════ -->
+  <header>
+    <div class="header-inner">
+      <div class="header-logo">
+        <span class="logo-text">MERIDIAN<span class="logo-dim"> // OBS</span></span>
+      </div>
+
+      <div class="progress-stars" aria-label="Fragment progress: 0 of 9 decoded">
+        <span class="progress-star" data-fragment="0" title="Fragment 0"></span>
+        <span class="progress-star" data-fragment="1" title="Fragment 1"></span>
+        <span class="progress-star" data-fragment="2" title="Fragment 2"></span>
+        <span class="progress-star" data-fragment="3" title="Fragment 3"></span>
+        <span class="progress-star" data-fragment="4" title="Fragment 4"></span>
+        <span class="progress-star" data-fragment="5" title="Fragment 5"></span>
+        <span class="progress-star" data-fragment="6" title="Fragment 6"></span>
+        <span class="progress-star" data-fragment="7" title="Fragment 7"></span>
+        <span class="progress-star" data-fragment="8" title="Fragment 8"></span>
+      </div>
+
+      <div class="header-controls">
+        <button id="mute-btn" aria-label="Toggle audio" title="Toggle audio">🔇</button>
+        <button id="transmit-btn" aria-label="Transmit signal data" title="Share your findings">📡 TRANSMIT</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════
+       MAIN CONTENT
+  ════════════════════════════════════════════ -->
+  <main>
+
+    <!-- ─────────────────────────────────────
+         SECTION 1: THE OBSERVATORY (HERO)
+    ────────────────────────────────────── -->
+    <section id="observatory" data-depth="1" aria-label="The Observatory">
+      <div class="hero-content">
+        <p class="hero-tagline" data-scroll-hint="true">Established 2007 · Signal Detection Division · Sector 7G</p>
+        <h1 class="hero-title glitch-target">MERIDIAN DEEP-SPACE OBSERVATORY</h1>
+        <p class="hero-status">STATION STATUS: ████ OFFLINE SINCE 2019 ████</p>
+        <p class="hero-subtitle">Some lights refuse to die</p>
+
+        <!-- Fragment 1: Nebula hover puzzle -->
+        <div class="nebula-cloud" aria-hidden="true" data-scroll-hint="true"></div>
+      </div>
+
+      <span class="margin-note" style="top:15%;right:2%;">// signal first detected 2019-01-15</span>
+      <span class="margin-note" style="bottom:12%;left:1%;">// station power: residual</span>
+    </section>
+
+    <!-- ─────────────────────────────────────
+         SECTION 2: THE SIGNAL
+    ────────────────────────────────────── -->
+    <section id="signal" data-depth="2" aria-label="The Signal">
+      <div class="signal-header">
+        <h2 class="glitch-target">SIGNAL INTERCEPT // DESIGNATION: OBS-7</h2>
+        <p class="signal-subtitle">Not all signals travel forward</p>
+      </div>
+
+      <div id="waveform-container" data-scroll-hint="true">
+        <div class="waveform-label">LIVE WAVEFORM — CHANNEL 7G-ALPHA</div>
+        <canvas id="waveform-canvas" aria-label="Signal waveform visualization"></canvas>
+        <div class="waveform-status">
+          <span class="status-dot"></span>
+          MONITORING ACTIVE
+        </div>
+      </div>
+
+      <div class="signal-data">
+        <div class="data-row">
+          <span class="data-label">FREQUENCY</span>
+          <span class="data-value">1420.405 MHz</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">AMPLITUDE</span>
+          <span class="data-value">-42.7 dBm</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">ORIGIN</span>
+          <span class="data-value">UNKNOWN — BEARING 127.0.0.1°</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">MODULATION</span>
+          <span class="data-value">NON-STANDARD // PATTERN DETECTED</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">DURATION</span>
+          <span class="data-value">CONTINUOUS SINCE 2019-01-15T03:42:00Z</span>
+        </div>
+        <div class="data-row">
+          <span class="data-label">CLASSIFICATION</span>
+          <span class="data-value" style="color:var(--mars-red);">ANOMALOUS — REQUIRES REVIEW</span>
+        </div>
+      </div>
+
+      <!-- Fragment 5: Hidden frequency reveal -->
+      <div id="frequency-reveal" class="fragment-hidden" aria-hidden="true">
+        <p class="reveal-label">DECODED FREQUENCY SIGNATURE</p>
+        <p class="reveal-text">Fragment 5: "THE SIGNAL REMEMBERS"</p>
+      </div>
+
+      <!-- Custom context menu (right-click on waveform) -->
+      <div id="custom-context-menu" role="menu" aria-hidden="true">
+        <button class="context-item" role="menuitem" data-action="amplify">▲ Amplify Signal</button>
+        <button class="context-item" role="menuitem" data-action="filter">◈ Filter Noise</button>
+        <button class="context-item" role="menuitem" data-action="reverse">◄ Reverse Playback</button>
+      </div>
+
+      <span class="margin-note" style="top:8%;left:1%;">// hydrogen line frequency — coincidence?</span>
+      <span class="margin-note" style="bottom:5%;right:2%;">// try listening backwards</span>
+    </section>
+
+    <!-- ─────────────────────────────────────
+         SECTION 3: THE CATALOG
+    ────────────────────────────────────── -->
+    <section id="catalog" data-depth="2" aria-label="Celestial Catalog">
+      <div class="catalog-header">
+        <h2 class="glitch-target">CELESTIAL CATALOG // OBJECTS OF INTEREST</h2>
+        <p class="catalog-subtitle">Three subjects. One is missing.</p>
+      </div>
+
+      <div class="planet-cards">
+        <!-- VENUS -->
+        <article class="planet-card glitch-target" data-planet="venus">
+          <div class="planet-card-header">
+            <h3>VENUS</h3>
+            <span class="planet-designation">SOL-2 // EVENING STAR</span>
+          </div>
+          <div class="planet-data">
+            <div class="planet-stat">
+              <span class="stat-label">DIAMETER</span>
+              <span class="stat-value">12,104 km</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">DISTANCE</span>
+              <span class="stat-value">108.2M km from Sol</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">ATMOSPHERE</span>
+              <span class="stat-value">CO₂ 96.5% — Surface pressure 92 atm</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">SURFACE TEMP</span>
+              <span class="stat-value">462°C — Hottest in system</span>
+            </div>
+          </div>
+          <p class="planet-description">She burns beneath her clouds, a golden furnace veiled in acid rain. The ancient astronomers called her the morning star, not knowing she was already watching them.</p>
+          <div class="planet-glyph" aria-hidden="true">♀</div>
+        </article>
+
+        <!-- MARS -->
+        <article class="planet-card glitch-target" data-planet="mars">
+          <div class="planet-card-header">
+            <h3>MARS</h3>
+            <span class="planet-designation">SOL-4 // THE RED WANDERER</span>
+          </div>
+          <div class="planet-data">
+            <div class="planet-stat">
+              <span class="stat-label">DIAMETER</span>
+              <span class="stat-value">6,779 km</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">DISTANCE</span>
+              <span class="stat-value">227.9M km from Sol</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">ATMOSPHERE</span>
+              <span class="stat-value">CO₂ 95.3% — Surface pressure 0.006 atm</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">SURFACE TEMP</span>
+              <span class="stat-value">−63°C avg — Dust storms global</span>
+            </div>
+          </div>
+          <p class="planet-description">The red planet keeps its secrets buried under iron oxide. Olympus Mons watches in silence. Something stirs beneath Valles Marineris — or so Dr. Voss claimed in her final week.</p>
+          <div class="planet-glyph" aria-hidden="true">♂</div>
+        </article>
+
+        <!-- THE VOID -->
+        <article class="planet-card glitch-target" data-planet="void">
+          <div class="planet-card-header">
+            <h3>THE VOID BETWEEN</h3>
+            <span class="planet-designation">DESIGNATION: NULL // ████████</span>
+          </div>
+          <div class="planet-data">
+            <div class="planet-stat">
+              <span class="stat-label">DIAMETER</span>
+              <span class="stat-value">— — —</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">DISTANCE</span>
+              <span class="stat-value">UNDEFINED</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">ATMOSPHERE</span>
+              <span class="stat-value">NONE DETECTED</span>
+            </div>
+            <div class="planet-stat">
+              <span class="stat-label">CLASSIFICATION</span>
+              <span class="stat-value" style="color:var(--nebula-violet);">ANOMALOUS REGION</span>
+            </div>
+          </div>
+          <p class="planet-description">Between the known worlds there is a space that refuses measurement. The instruments fail. The data corrupts. And yet — something is here.</p>
+          <div id="void-fragment" class="fragment-hidden" aria-hidden="true">
+            <p>Fragment 3: "EMPTINESS IS JUST UNDISCOVERED FULLNESS"</p>
+          </div>
+          <div class="planet-glyph" aria-hidden="true">◌</div>
+        </article>
+      </div>
+
+      <span class="margin-note" style="top:5%;right:1%;">// the order matters: venus, void, mars — or was it…</span>
+      <span class="margin-note" style="bottom:3%;left:2%;">// click them in the right sequence</span>
+    </section>
+
+    <!-- ─────────────────────────────────────
+         SECTION 4: THE LOGBOOK
+    ────────────────────────────────────── -->
+    <section id="logbook" data-depth="3" aria-label="Research Logbook">
+      <div class="logbook-header">
+        <h2 class="glitch-target">DR. VOSS'S RESEARCH LOG // CLASSIFIED</h2>
+        <p class="logbook-subtitle">Personnel file: Dr. Elara Voss — Chief Signal Analyst — Status: MISSING</p>
+      </div>
+
+      <div class="log-entries">
+        <!-- Entry 1 -->
+        <div class="log-entry" data-scroll-hint="true">
+          <div class="log-meta">
+            <time class="log-date" datetime="2019-01-15">2019-01-15</time>
+            <span class="log-id">LOG-0041</span>
+          </div>
+          <h3 class="log-title">First Detection</h3>
+          <div class="log-content">
+            <p>The array picked up something at 03:42 UTC. Not cosmic background — too structured. Not satellite — wrong frequency. The waveform repeated exactly every 73 seconds, which shouldn't be possible for a natural source.</p>
+            <p>I've isolated the signal on Channel 7G. The others think it's equipment malfunction. I know what equipment malfunction looks like. This is something else.</p>
+            <p>Initial classification: <strong>ANOMALOUS</strong>. I'm keeping this one off the main log for now.</p>
+          </div>
+        </div>
+
+        <!-- Entry 2 -->
+        <div class="log-entry" data-scroll-hint="true">
+          <div class="log-meta">
+            <time class="log-date" datetime="2019-02-03">2019-02-03</time>
+            <span class="log-id">LOG-0058</span>
+          </div>
+          <h3 class="log-title">Pattern Recognition</h3>
+          <div class="log-content">
+            <p>Three weeks of analysis. The signal contains nested patterns — fractals within fractals. Each repetition introduces a micro-variation, like it's <em>evolving</em>.</p>
+            <p>I've been staring at the nebula visualizations for hours. She stared at the cloud until it stared back. That's what it feels like. The data gazes into you.</p>
+            <p>Note to self: the hover-state on the monitoring dashboard shows something when you linger. Need to investigate the rendering bug — or is it a feature?</p>
+          </div>
+        </div>
+
+        <!-- Entry 3 -->
+        <div class="log-entry" data-scroll-hint="true">
+          <div class="log-meta">
+            <time class="log-date" datetime="2019-02-14">2019-02-14</time>
+            <span class="log-id">LOG-0067</span>
+          </div>
+          <h3 class="log-title">The Frequency</h3>
+          <div class="log-content">
+            <p>1420.405 MHz — the hydrogen line. The most fundamental frequency in the universe. Of course it would use that. Whatever is sending this signal knows the language of physics.</p>
+            <p>I tried typing the word "OBSIDIAN" into the terminal while the signal was live. The waveform <em>changed</em>. It responded. Signals don't respond. Signals are passive. Unless they're not signals at all.</p>
+            <p>I need to document the exact keystrokes. Something about typing specific words triggers hidden data in the stream.</p>
+          </div>
+        </div>
+
+        <!-- Entry 4 -->
+        <div class="log-entry" data-scroll-hint="true">
+          <div class="log-meta">
+            <time class="log-date" datetime="2019-02-28">2019-02-28</time>
+            <span class="log-id">LOG-0079</span>
+          </div>
+          <h3 class="log-title">Sequence</h3>
+          <div class="log-content">
+            <p>The signal references three celestial bodies in a specific order. Venus first — the bright one, the deceiver. Then the void — the absence that defines the presence. Then Mars — the red truth at the end of the sequence.</p>
+            <p>When I arranged the observatory's planet cards in this order and interacted with them sequentially, the monitoring system revealed a hidden data layer. It's like the station itself was built with secrets in its architecture.</p>
+            <p>Planetary alignment: ♀ → ◌ → ♂. Remember the order.</p>
+          </div>
+        </div>
+
+        <!-- Entry 5 -->
+        <div class="log-entry" data-scroll-hint="true">
+          <div class="log-meta">
+            <time class="log-date" datetime="2019-03-07">2019-03-07</time>
+            <span class="log-id">LOG-0085</span>
+          </div>
+          <h3 class="log-title">Redacted</h3>
+          <div class="log-content">
+            <p>They've started censoring my logs. But I've hidden the truth in plain sight — <span class="redacted" data-secret="RECIPIENT: ANYONE WHO SEARCHES — THE UNIVERSE REWARDS THE CURIOUS">████████████████████</span>. They can black out the words but they can't black out the meaning.</p>
+            <p>Select your truth carefully — some things hide in plain sight. The redaction bars are not walls; they are doors for those who know how to knock three times.</p>
+            <p>If you're reading this after I'm gone: <span class="redacted" data-secret="RECIPIENT: ANYONE WHO SEARCHES — THE UNIVERSE REWARDS THE CURIOUS">████████████ ██████████</span>. Trust the pattern. Trust the signal. It has never lied.</p>
+          </div>
+        </div>
+
+        <!-- Entry 6 -->
+        <div class="log-entry" data-scroll-hint="true">
+          <div class="log-meta">
+            <time class="log-date" datetime="2019-03-13">2019-03-13</time>
+            <span class="log-id">LOG-0091</span>
+          </div>
+          <h3 class="log-title">Final Entry</h3>
+          <div class="log-content">
+            <p>Last night I saw it move. The satellite icon on the monitoring dashboard — it drifted across the screen on its own. I chased it. I clicked on it. It showed me something I can't unsee.</p>
+            <p>I'm chasing shadows across the screen now. Maybe the shadows are chasing me. The signal has become everything: the waveform, the planet data, the redacted text, the void between the stars. It's all one message.</p>
+            <p>If the station goes dark after tonight, know that I didn't leave. I was <em>received</em>.</p>
+            <p class="log-signoff">— Dr. Elara Voss, Meridian Observatory, Signing Off</p>
+          </div>
+        </div>
+      </div>
+
+      <span class="margin-note" style="top:3%;left:1%;">// triple-click the black bars</span>
+      <span class="margin-note" style="bottom:2%;right:1%;">// she knew what she was doing</span>
+    </section>
+
+    <!-- ─────────────────────────────────────
+         SECTION 5: THE VAULT
+    ────────────────────────────────────── -->
+    <section id="vault" data-depth="3" aria-label="The Vault">
+      <div class="vault-header">
+        <h2 class="glitch-target">THE VAULT // FINAL TRANSMISSION</h2>
+        <p class="vault-subtitle">All signals converge here</p>
+      </div>
+
+      <div class="vault-door">
+        <div class="vault-ring vault-ring-outer" aria-hidden="true"></div>
+        <div class="vault-ring vault-ring-middle" aria-hidden="true"></div>
+        <div class="vault-ring vault-ring-inner" aria-hidden="true"></div>
+        <div class="vault-lock-indicator">
+          <span class="lock-icon">🔒</span>
+          <span class="lock-text">LOCKED — 0/9 FRAGMENTS DECODED</span>
+        </div>
+      </div>
+
+      <div id="vault-iris" aria-hidden="true"></div>
+
+      <div id="vault-content" aria-hidden="true">
+        <div id="vault-message">
+          <h3 class="vault-message-title">FINAL TRANSMISSION — DR. ELARA VOSS</h3>
+          <p>If you are reading this, you have decoded all nine fragments. You have followed the signal where others turned away. You stared into the void, and — just as I promised — the void stared back with something luminous.</p>
+          <p>The Obsidian Signal was never extraterrestrial. It was never a malfunction. It was a message I encoded into the very architecture of this observatory — a test to find minds curious enough to look beyond the surface.</p>
+          <p>You hovered where light gathered. You typed the forbidden word. You listened to the frequency. You clicked the planets in their secret order. You read what they tried to redact. You caught the runaway satellite. You searched the void. You decoded the Morse. You found this vault.</p>
+          <p class="vault-highlight">The universe does not hide its wonders. We simply forget to look.</p>
+          <p>Welcome to the other side of the signal.</p>
+          <p class="vault-signoff">— Elara Voss, March 2019<br><span class="vault-signoff-sub">Transmission complete.</span></p>
+        </div>
+      </div>
+
+      <div class="fragment-assembly" aria-label="Fragment assembly">
+        <div class="fragment-slot" data-fragment="0"><span class="fragment-label">I</span></div>
+        <div class="fragment-slot" data-fragment="1"><span class="fragment-label">II</span></div>
+        <div class="fragment-slot" data-fragment="2"><span class="fragment-label">III</span></div>
+        <div class="fragment-slot" data-fragment="3"><span class="fragment-label">IV</span></div>
+        <div class="fragment-slot" data-fragment="4"><span class="fragment-label">V</span></div>
+        <div class="fragment-slot" data-fragment="5"><span class="fragment-label">VI</span></div>
+        <div class="fragment-slot" data-fragment="6"><span class="fragment-label">VII</span></div>
+        <div class="fragment-slot" data-fragment="7"><span class="fragment-label">VIII</span></div>
+        <div class="fragment-slot" data-fragment="8"><span class="fragment-label">IX</span></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════════════
+       FOOTER
+  ════════════════════════════════════════════ -->
+  <footer>
+    <p class="footer-copyright">© 2007–2019 Meridian Deep-Space Observatory · All transmissions archived</p>
+    <p class="footer-morse" aria-label="Morse code message" title="Decode me">·· ·–·· ···· ·–·· ··–·· –·–· ·–·· ·· ––– –·</p>
+    <p class="footer-epitaph">If you have found this site, the signal found you first.</p>
+  </footer>
+
+  <!-- ═══════════════════════════════════════════
+       FLOATING ELEMENTS
+  ════════════════════════════════════════════ -->
+  <div id="satellite-icon" role="button" aria-label="Runaway satellite — catch it!" tabindex="0" title="Catch me">🛰️</div>
+
+  <div id="fragment-reveal-overlay" aria-hidden="true">
+    <div id="fragment-text"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       APPLICATION ENTRY
+  ════════════════════════════════════════════ -->
+  <script type="module" src="js/app.js"></script>
+
+</body>
+</html>

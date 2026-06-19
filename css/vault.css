@@ -1,0 +1,440 @@
+/* ═══════════════════════════════════════════════════════
+   VAULT.CSS — The Obsidian Signal — Vault-Specific Styles
+   ═══════════════════════════════════════════════════════ */
+
+/* ── VAULT SECTION BACKGROUND ──────────────────────── */
+#vault {
+  position: relative;
+  overflow: hidden;
+}
+
+#vault::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 600px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(46, 26, 71, 0.12) 0%,
+    rgba(192, 57, 43, 0.04) 40%,
+    transparent 70%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+  transition: all 1.5s ease;
+}
+
+#vault.unlocked::before {
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(
+    circle,
+    rgba(0, 255, 136, 0.06) 0%,
+    rgba(243, 156, 18, 0.04) 30%,
+    rgba(46, 26, 71, 0.06) 50%,
+    transparent 70%
+  );
+}
+
+/* ── VAULT DOOR ────────────────────────────────────── */
+.vault-door {
+  position: relative;
+  width: 260px;
+  height: 260px;
+  margin: 0 auto var(--space-xl);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: grayscale(0.4) brightness(0.7);
+  transition: all var(--transition-glacial);
+}
+
+/* Concentric rings */
+.vault-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid var(--void-border);
+  transition: all 1.2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.vault-ring-outer {
+  width: 100%;
+  height: 100%;
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.vault-ring-middle {
+  width: 75%;
+  height: 75%;
+  border-color: rgba(255, 255, 255, 0.08);
+  border-width: 2px;
+}
+
+.vault-ring-inner {
+  width: 50%;
+  height: 50%;
+  border-color: rgba(255, 255, 255, 0.1);
+  border-width: 1px;
+  border-style: dashed;
+}
+
+/* Lock indicator — centered inside rings */
+.vault-lock-indicator {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.lock-icon {
+  font-size: 1.8rem;
+  transition: transform 0.6s ease;
+}
+
+.lock-text {
+  font-family: var(--font-mono);
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  white-space: nowrap;
+  max-width: 120px;
+  text-align: center;
+  line-height: 1.4;
+}
+
+
+/* ── VAULT UNLOCKING ANIMATION ─────────────────────── */
+.vault-door.unlocking {
+  filter: grayscale(0) brightness(1);
+}
+
+.vault-door.unlocking .vault-ring-outer {
+  border-color: rgba(0, 255, 136, 0.2);
+  animation: vault-ring-spin-outer 4s linear infinite;
+}
+
+.vault-door.unlocking .vault-ring-middle {
+  border-color: rgba(243, 156, 18, 0.3);
+  animation: vault-ring-spin-middle 3s linear infinite reverse;
+}
+
+.vault-door.unlocking .vault-ring-inner {
+  border-color: rgba(0, 255, 136, 0.4);
+  border-style: solid;
+  animation: vault-ring-spin-inner 2s linear infinite;
+}
+
+.vault-door.unlocking .lock-icon {
+  transform: scale(1.2);
+  animation: flicker 1.5s infinite;
+}
+
+.vault-door.unlocked {
+  filter: grayscale(0) brightness(1.1);
+}
+
+.vault-door.unlocked .vault-ring-outer {
+  border-color: var(--signal-green);
+  box-shadow:
+    0 0 20px rgba(0, 255, 136, 0.15),
+    inset 0 0 20px rgba(0, 255, 136, 0.05);
+  animation: none;
+}
+
+.vault-door.unlocked .vault-ring-middle {
+  border-color: var(--signal-green);
+  opacity: 0.6;
+  animation: none;
+}
+
+.vault-door.unlocked .vault-ring-inner {
+  border-color: var(--signal-green);
+  border-style: solid;
+  opacity: 0.4;
+  animation: none;
+}
+
+.vault-door.unlocked .lock-icon {
+  animation: none;
+  transform: scale(1);
+}
+
+
+/* Vault ring spin keyframes */
+@keyframes vault-ring-spin-outer {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes vault-ring-spin-middle {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes vault-ring-spin-inner {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+/* Glow intensify during unlock */
+@keyframes vault-glow-intensify {
+  0% {
+    box-shadow: 0 0 0 rgba(0, 255, 136, 0);
+  }
+  50% {
+    box-shadow:
+      0 0 40px rgba(0, 255, 136, 0.2),
+      0 0 80px rgba(0, 255, 136, 0.1);
+  }
+  100% {
+    box-shadow:
+      0 0 60px rgba(0, 255, 136, 0.15),
+      0 0 100px rgba(0, 255, 136, 0.08);
+  }
+}
+
+
+/* ── VAULT IRIS ────────────────────────────────────── */
+#vault-iris {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+  clip-path: circle(0% at 50% 50%);
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(0, 255, 136, 0.03) 0%,
+    transparent 70%
+  );
+  transition: clip-path 2s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+#vault-iris.opening {
+  animation: iris-open 2.5s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+#vault-iris.open {
+  clip-path: circle(75% at 50% 50%);
+}
+
+
+/* ── VAULT CONTENT ─────────────────────────────────── */
+#vault-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(40px);
+  transition:
+    opacity 1.2s ease 0.5s,
+    transform 1.2s ease 0.5s;
+  max-width: 680px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+#vault-content.revealed {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+/* ── VAULT MESSAGE TYPOGRAPHY ──────────────────────── */
+#vault-message {
+  text-align: left;
+}
+
+.vault-message-title {
+  font-family: var(--font-display);
+  font-size: clamp(0.8rem, 2vw, 1.1rem);
+  font-weight: 700;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--signal-green);
+  text-shadow: 0 0 20px rgba(0, 255, 136, 0.25);
+  margin-bottom: var(--space-xl);
+  text-align: center;
+}
+
+#vault-message p {
+  font-size: 1rem;
+  line-height: 2;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: var(--space-lg);
+  font-weight: 300;
+}
+
+#vault-message p:last-child {
+  margin-bottom: 0;
+}
+
+.vault-highlight {
+  font-family: var(--font-display);
+  font-size: 1.1rem !important;
+  color: var(--signal-green) !important;
+  text-align: center;
+  font-style: italic;
+  font-weight: 500 !important;
+  letter-spacing: 0.04em;
+  text-shadow:
+    0 0 20px rgba(0, 255, 136, 0.3),
+    0 0 40px rgba(0, 255, 136, 0.1);
+  padding: var(--space-lg) 0;
+  border-top: 1px solid rgba(0, 255, 136, 0.1);
+  border-bottom: 1px solid rgba(0, 255, 136, 0.1);
+  margin: var(--space-lg) 0 !important;
+}
+
+.vault-signoff {
+  font-family: var(--font-mono);
+  font-size: 0.8rem !important;
+  color: rgba(255, 255, 255, 0.35) !important;
+  text-align: right;
+  margin-top: var(--space-xl) !important;
+  font-style: italic;
+}
+
+.vault-signoff-sub {
+  display: block;
+  margin-top: var(--space-sm);
+  font-size: 0.7rem;
+  color: var(--signal-green);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  animation: pulse-text 3s ease-in-out infinite;
+}
+
+@keyframes pulse-text {
+  0%, 100% {
+    opacity: 0.6;
+    text-shadow: 0 0 10px rgba(0, 255, 136, 0.2);
+  }
+  50% {
+    opacity: 1;
+    text-shadow: 0 0 20px rgba(0, 255, 136, 0.5);
+  }
+}
+
+
+/* ── FRAGMENT ASSEMBLY ─────────────────────────────── */
+.fragment-assembly {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: var(--space-xl) 0;
+  flex-wrap: wrap;
+}
+
+/* Arc formation using transforms */
+.fragment-assembly .fragment-slot:nth-child(1) { transform: rotate(-40deg) translateY(-10px) rotate(40deg); }
+.fragment-assembly .fragment-slot:nth-child(2) { transform: rotate(-30deg) translateY(-16px) rotate(30deg); }
+.fragment-assembly .fragment-slot:nth-child(3) { transform: rotate(-15deg) translateY(-20px) rotate(15deg); }
+.fragment-assembly .fragment-slot:nth-child(4) { transform: rotate(-5deg) translateY(-22px) rotate(5deg); }
+.fragment-assembly .fragment-slot:nth-child(5) { transform: translateY(-24px); }
+.fragment-assembly .fragment-slot:nth-child(6) { transform: rotate(5deg) translateY(-22px) rotate(-5deg); }
+.fragment-assembly .fragment-slot:nth-child(7) { transform: rotate(15deg) translateY(-20px) rotate(-15deg); }
+.fragment-assembly .fragment-slot:nth-child(8) { transform: rotate(30deg) translateY(-16px) rotate(-30deg); }
+.fragment-assembly .fragment-slot:nth-child(9) { transform: rotate(40deg) translateY(-10px) rotate(-40deg); }
+
+/* All filled — transmission complete state */
+.fragment-assembly.complete .fragment-slot {
+  border-color: var(--signal-green);
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.2);
+}
+
+.fragment-assembly.complete::after {
+  content: 'TRANSMISSION COMPLETE';
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--signal-green);
+  margin-top: var(--space-lg);
+  animation: pulse-text 3s ease-in-out infinite;
+  text-shadow:
+    0 0 10px rgba(0, 255, 136, 0.3),
+    0 0 30px rgba(0, 255, 136, 0.1);
+}
+
+
+/* ── VAULT PROGRESS UPDATE STYLES ──────────────────── */
+.vault-progress-update {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  color: var(--signal-green-dim);
+  text-align: center;
+  margin-top: var(--space-md);
+  opacity: 0;
+  animation: fade-in-up 0.6s ease forwards;
+}
+
+.vault-progress-flash {
+  animation: vault-progress-blink 0.8s ease;
+}
+
+@keyframes vault-progress-blink {
+  0% { color: var(--signal-green); text-shadow: 0 0 10px var(--signal-green); }
+  100% { color: var(--signal-green-dim); text-shadow: none; }
+}
+
+
+/* ── VAULT RESPONSIVE ──────────────────────────────── */
+@media (max-width: 640px) {
+  .vault-door {
+    width: 200px;
+    height: 200px;
+  }
+
+  .lock-text {
+    font-size: 0.45rem;
+    max-width: 90px;
+  }
+
+  .lock-icon {
+    font-size: 1.4rem;
+  }
+
+  #vault-content {
+    padding: var(--space-lg) var(--space-md);
+  }
+
+  #vault-message p {
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+
+  .vault-highlight {
+    font-size: 0.95rem !important;
+  }
+
+  .fragment-assembly {
+    gap: 8px;
+  }
+
+  .fragment-slot {
+    width: 36px;
+    height: 36px;
+  }
+
+  .fragment-slot .fragment-label {
+    font-size: 0.45rem;
+  }
+
+  /* Flatten the arc on mobile */
+  .fragment-assembly .fragment-slot {
+    transform: none !important;
+  }
+}
